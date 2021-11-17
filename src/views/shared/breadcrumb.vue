@@ -4,7 +4,7 @@
             <router-link class="font-bold text-xl pl-1" to="/">داشبورد</router-link><router-link v-if="name !== ''" class="text-md font-medium pr-1" :to="url"><i class='feather feather-chevron-left ml-1'></i> {{name}}</router-link>
         </div>
         <div>
-            <button v-show="btnText !== null " @click="showModalFunc"  class="py-2 px-5 text-blue-gray-200 bg-sky-700 rounded-md" type="button"><i class='feather feather-plus relative top-px ml-2'></i>{{btnText}}</button>
+            <button v-show="btnText !== null " @click="showModalFunc"  class="py-2 px-5 text-blue-gray-200 bg-sky-600 rounded-md" type="button"><i class='feather feather-plus relative top-px ml-2'></i>{{btnText}}</button>
         </div>
     </div>
 </template>

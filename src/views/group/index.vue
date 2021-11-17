@@ -10,21 +10,18 @@
                     <form>
                         <div class="w-3/3 my-2">
                             <label class="py-1" for="name">نام گروه :</label>
-                            <n-input id="name" type="text" placeholder="نام گروه را وارد کنید" />
-                        </div>
-                        <div class="w-3/3 my-2">
-                            <label class="py-1" for="typeName"> نوع گروه :</label>
-                            <n-input id="typeName" type="text" placeholder=" نوع گروه را وارد کنید" />
+                            <n-input id="name" v-model:value="state.groupData.name" type="text" placeholder="نام گروه را وارد کنید" />
                         </div>
                         <div class="w-3/3 my-2">
                             <label class="py-1" for="description"> توضیحات گروه :</label>
-                            <n-input id="description" v-model:value="value" type="textarea" placeholder="توضیحات مربوط به گروه ..." />
+                            <n-input id="description" v-model:value="state.groupData.description" type="textarea" placeholder="توضیحات مربوط به گروه ..." />
                         </div>
                     </form>
                 </div>
             <template #action>
                 <div>
-                    <n-button type="success" @click="addGroup">افزودن</n-button>
+                    <n-button type="success" v-if="state.newItem" @click="addGroup">افزودن</n-button>
+                    <n-button type="success" v-if="!state.newItem" @click="editGroup">ویرایش</n-button>
                 </div>
             </template>
         </n-modal>
@@ -48,13 +45,13 @@
                         <td><n-skeleton v-if="state.loadingSkeleton" :sharp="false" size="medium" /></td>
                     </tr>
                     
-                    <tr v-for="item in state.groupList" :key="item.id">
-                        <td>{{item.id}}</td>
+                    <tr v-for="(item,index) in state.groupList" :key="item.id">
+                        <td>{{index+1}}</td>
                         <td>{{item.name}}</td>
                         <td>{{item.typeName}}</td>
                         <td>{{item.description}}</td>
                         <td>
-                            <button type="button" class="rounded-md h-7 text-white bg-yellow-400 ml-2 hover:bg-yellow-500">
+                            <button type="button" @click="showEditModal(item)" class="rounded-md h-7 text-white bg-yellow-400 ml-2 hover:bg-yellow-500">
                                 <i class='feather feather-edit-2 px-2 py-8'></i>
                             </button>
                             <n-popconfirm positive-text="بلی" negative-text="خیر" @positive-click="deleteItem(item.id)">
@@ -80,6 +77,9 @@
 import {reactive,onMounted} from 'vue';
 import breadcrumb from '../shared/breadcrumb.vue';
 import { fetchGroupStartAsync } from '../../store/group/group.actions';
+import { fetchCreateGroupStartAsync } from '../../store/group/create/group.actions';
+import { fetchDeleteGroupStartAsync } from '../../store/group/delete/group.actions';
+import { fetchEditGroupStartAsync } from '../../store/group/edit/group.actions';
 import { useStore } from "vuex";
 import { useToast, POSITION } from "vue-toastification";
 export default {
@@ -107,22 +107,87 @@ export default {
                     searches: []
                 },
                 orders: []
-            }
+            },
+            groupData: {
+                id: 0,
+                typeId: 1,
+                typeName: "گروه محصولات",
+                name: "",
+                description: ""
+            },
+            newItem : true
         })
         const showModalBox = (show) => {
             state.showModal = show
         }
+        const showEditModal = (item) => {
+            state.showModal = true;
+            state.groupData.id = item.id;
+            state.groupData.typeId = item.typeId;
+            state.groupData.typeName = item.typeName;
+            state.groupData.name = item.name;
+            state.groupData.description = item.description;
+            state.newItem = false;
+        }
+        const editGroup = () => {
+            const data = {};
+            data.EditGroup = state.groupData;
+            data.onSuccess = () => {
+                console.log("[on-success] createGroup");
+                toast.success("ویرایش گروه موفقیت آمیز بود", {
+                    position: POSITION.TOP_CENTER
+                });
+                getGroups();
+            };
+            data.onError = error => {
+                console.log(error);
+                state.loadingSkeleton = false;
+                toast.error('خطایی در برنامه رخ داده است ، لطفا با پشتیبان تماس بگیرید', {
+                    position: POSITION.TOP_CENTER
+                });
+            };
+            fetchEditGroupStartAsync(store, data);
+            state.showModal = false;
+            state.newItem = true;
+        }
         const deleteItem = (id) => {
-            console.log('حذف فرضی ایتم '+id);
-            toast.success("حذف موفقیت آمیز بود", {
-                position: POSITION.TOP_CENTER
-            });
+            const data = {};
+            data.GroupId = id;
+            data.onSuccess = () => {
+                console.log("[on-success] createGroup");
+                toast.success("حذف موفقیت آمیز بود", {
+                    position: POSITION.TOP_CENTER
+                });
+                getGroups();
+            };
+            data.onError = error => {
+                console.log(error);
+                state.loadingSkeleton = false;
+                toast.error('خطایی در برنامه رخ داده است ، لطفا با پشتیبان تماس بگیرید', {
+                    position: POSITION.TOP_CENTER
+                });
+            };
+            fetchDeleteGroupStartAsync(store, data);
         }
         const addGroup = () => {
-            toast.success("عملیات موفقیت آمیز بود", {
-                position: POSITION.TOP_CENTER
-            });
-            state.showModal = false
+            const data = {};
+            data.groupData = state.groupData;
+            data.onSuccess = () => {
+                console.log("[on-success] createGroup");
+                toast.success("عملیات موفقیت آمیز بود", {
+                    position: POSITION.TOP_CENTER
+                });
+                state.showModal = false
+                getGroups();
+            };
+            data.onError = error => {
+                console.log(error);
+                state.loadingSkeleton = false;
+                toast.error('لطفا تمامی فیلد ها را به صورت صحیح تکمیل نمایید', {
+                    position: POSITION.TOP_CENTER
+                });
+            };
+            fetchCreateGroupStartAsync(store, data);
         }
         const getGroups = () => {
             const data = {};
@@ -150,7 +215,9 @@ export default {
             state,
             deleteItem,
             showModalBox,
-            addGroup
+            addGroup,
+            showEditModal,
+            editGroup
             
         }
     }

@@ -19,7 +19,7 @@ export default {
             if (!state.isSideBar){
                 root.value.classList.remove("main-content");
                 root.value.classList.remove("2xl:w-25/30");
-                root.value.classList.remove("lg:w-23/30");
+                root.value.classList.remove("lg:w-24/30");
             }
         });
     return {
@@ -36,18 +36,32 @@ export default {
         padding-right: 3rem;
         padding-bottom: 1rem;
     }
-    .main-content:after {
+    .main-content:before {
         content: "";
         z-index: -1;
         border-radius: 0 45px 0 0;
         margin-top: 0.8rem;
-        margin-right: -1.1rem;
+        margin-right: -1rem;
         position: absolute;
         top: 0;
         bottom: 0;
         right: 0;
         width: 100%;
         background-color: #ffffff7d;
-        opacity: 0.6;
+        opacity: 0.7;
+    }
+    .main-content:after {
+        content: "";
+        z-index: -2;
+        border-radius: 0 45px 0 0;
+        margin-top: 1.1rem;
+        margin-right: -1.7rem;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        background-color: #ffffff7d;
+        opacity: 0.2;
     }
 </style>
