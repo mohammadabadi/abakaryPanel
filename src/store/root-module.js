@@ -1,4 +1,5 @@
 import categoryModule from "./category/category.module";
+import shopModule from "./shop/shop.module"
 import groupModule from "./group/group.module";
 import createGroupModule from "./group/create/group.module";
 import deleteGroupModule from "./group/delete/group.module";
@@ -12,7 +13,8 @@ const rootModule = {
     login: loginModule,
     createGroup: createGroupModule,
     deleteGroup: deleteGroupModule,
-    editGroup: editGroupModule
+    editGroup: editGroupModule,
+    shop: shopModule
 };
 
 export default rootModule;

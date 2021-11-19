@@ -74,7 +74,57 @@
     </div>
 </template>
 <script>
+import {reactive,onMounted} from 'vue';
+import { fetchShopStartAsync } from '../../store/shop/shop.actions';
+import { useStore } from "vuex";
+import { CookieUtilsInstance } from "../../utils";
+import { useToast, POSITION } from "vue-toastification";
+import { CookieUtils } from "../../utils";
 export default {
+    setup(){
+        const store = useStore();
+        const toast = useToast();
+        const state = reactive({
+            shopId : '',
+            searchField : {
+                page: {
+                    currentPage: 1,
+                    pageLength: 1000
+                },
+                searches: {
+                    searchAll: "",
+                    searches: []
+                },
+                orders: []
+            },
+
+        })
+        const getShopId = () =>{
+            const data = {};
+            data.userId = CookieUtilsInstance.getCookieFromBrowser("userId");
+            data.onSuccess = (shopId) => {    
+                toast.success("فروشگاه با موفقیت انتخاب شد", {
+                    position: POSITION.TOP_CENTER
+                });
+                CookieUtils.setCookie(
+                "shopId",
+                shopId[0].id
+            );
+            };
+            data.onError = error => {
+                toast.error('خطایی در برنامه رخ داده است ، لطفا با پشتیبان تماس بگیرید', {
+                    position: POSITION.TOP_CENTER
+                });
+            };
+            fetchShopStartAsync(store, data);
+        }
+        onMounted(() => {
+            getShopId();
+        });
+        return{
+            state
+        }
+    }
     
 }
 </script>
