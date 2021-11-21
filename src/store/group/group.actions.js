@@ -1,4 +1,5 @@
 import axios from "axios";
+import { base_url } from "../static";
 import { GroupActionTypes } from "./group.types";
 
 export const groupActions = {
@@ -18,7 +19,7 @@ export const groupActions = {
     context.dispatch(GroupActionTypes.FETCH_GROUP_START);
     return new Promise((resolve, reject) => {
       axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-       axios.post(`http://service.abakary.ir/api/Group/GetGroups`,searchField).then(response => {
+       axios.post(`${base_url}/Group/GetGroups`,searchField).then(response => {
         if (response.statusText === "OK") {
           
           context.dispatch(

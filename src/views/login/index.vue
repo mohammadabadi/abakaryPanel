@@ -1,5 +1,5 @@
 <template lang="">
-    <div class="app-center w-3/3 h-3/3 md:w-8/30 md:h-1/3 border border-blue-gray-200 shadow-md rounded-xl px-8 py-2">
+    <div class="app-center w-30/30 h-96 lg:w-8/30 md:border border-blue-gray-200 md:shadow-md rounded-xl px-8 py-2">
         <div class="logo-box h-16 w-full justify-center items-center h-24 flex border-b border-blue-gray-100">
             <img style="max-width:200px;max-height:66px" :src="logo" alt="آباکاری | abakary">
         </div>
@@ -13,7 +13,7 @@
                     <label class="py-1" for="password">رمز عبور :</label>   
                     <n-input id="password" type="password" show-password-on="mousedown" v-model:value="state.loginData.password" placeholder="رمز عبور خود را وارد کنید" :minlength="8"/>
                 </div>
-                <div class="w-3/3 my-2 h-16 flex justify-center items-center">
+                <div class="w-3/3 my-8 h-16 flex justify-center items-center">
                     <button class="px-16 py-2 rounded-md bg-green-600 text-white" type="button" @click="signIn">ورود</button>
                 </div>
             </form>
@@ -51,7 +51,7 @@ export default {
                 state.success = true
                 setTimeout(function() {
                     window.location.href = "/";
-                }, 3000);
+                }, 1500);
             };
             data.onError = error => {
                 console.log(error);

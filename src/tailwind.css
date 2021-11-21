@@ -15,8 +15,14 @@
         padding: 0;
         margin-right: 0.5rem;
     }
-        
-        
+    .v-binder-follower-content > * {
+        pointer-events: all;
+        direction: rtl;
+    }       
+    .n-select .n-base-selection , .n-select .n-base-selection-label , .n-select .n-base-selection-input{
+        background: transparent !important;
+        color: unset !important;
+    } 
     .n-popconfirm .n-popconfirm__action {
         justify-content: center;
     }

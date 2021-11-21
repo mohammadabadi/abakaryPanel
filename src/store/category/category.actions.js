@@ -1,5 +1,7 @@
 import axios from "axios";
 import { CategoryActionTypes } from "./category.types";
+import { CookieUtilsInstance } from "../../utils";
+import { base_url } from "../static";
 
 export const categoryActions = {
   [CategoryActionTypes.FETCH_CATEGORY_START]({ commit }) {
@@ -17,8 +19,9 @@ export const categoryActions = {
   ) {
     context.dispatch(CategoryActionTypes.FETCH_CATEGORY_START);
     return new Promise((resolve, reject) => {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${CookieUtilsInstance.getCookieFromBrowser("jwt_access_token")}`;
       axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-      axios.post(`http://service.abakary.ir/api/Category/GetCategories?ShopId=1`,searchField).then(response => {
+      axios.post(`${base_url}/Category/GetCategories?ShopId=${CookieUtilsInstance.getCookieFromBrowser("shopId")}`,searchField).then(response => {
         if (response.statusText === "OK") {
           
           context.dispatch(

@@ -195,7 +195,6 @@ export default {
             data.onSuccess = () => {
                 console.log("[on-success] group");
                 state.groupList = store.getters["group/getGroups"];
-                console.log(state.groupList);
                 state.loadingSkeleton = false;
                 
             };

@@ -1,5 +1,7 @@
 import axios from "axios";
+import { base_url } from "../static";
 import { ProductActionTypes } from "./product.types";
+import { CookieUtilsInstance } from "../../utils";
 
 export const productActions = {
   [ProductActionTypes.FETCH_PRODUCT_START]({ commit }) {
@@ -17,8 +19,9 @@ export const productActions = {
   ) {
     context.dispatch(ProductActionTypes.FETCH_PRODUCT_START);
     return new Promise((resolve, reject) => {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${CookieUtilsInstance.getCookieFromBrowser("jwt_access_token")}`;
       axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-       axios.post(`http://service.abakary.ir/api/Product/GetProducts?ShopId=1`,searchField).then(response => {
+       axios.post(`${base_url}/Product/GetProducts?ShopId=${CookieUtilsInstance.getCookieFromBrowser("shopId")}`,searchField).then(response => {
         if (response.statusText === "OK") {
           
           context.dispatch(
@@ -29,7 +32,7 @@ export const productActions = {
           onSuccess();
         } else {
           context.dispatch(ProductActionTypes.FETCH_PRODUCT_FAILURE);
-          reject(response.data.message);
+          reject(response.data.Description);
           onError();
         }
       });

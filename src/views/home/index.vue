@@ -3,11 +3,11 @@
         <breadcrumb :name="state.breadcrumb.name" :url="state.breadcrumb.url" :btnText="null"/>
         <div class="flex flex-row my-4">
             <div class="w-1/4 h-52 inline-flex relative" v-for="item in state.homeData" :key="item.name">
-                <div :class="item.color" class="text-lg font-extrabold p-4 m-4 w-full rounded-xl border-2 border-blue-gray-100 shadow-sm relative">
+                <div :class="item.color" class="text-md lg:text-lg font-bold p-4 m-4 w-full rounded-xl border-2 border-blue-gray-100 shadow-sm relative">
                     <div class="px-4 py-2">
                         <i :class="item.icon" class='feather relative top-px text-2xl bg-blue-gray-100 p-4 h-16 w-16 rounded-full'></i>
                         <span class="inline-block pr-2">{{item.name}}</span>
-                        <p class="app-center my-2 font-extrabold text-4xl">{{item.count}}</p>
+                        <p class="app-center my-2 font-bold text-lg lg:text-4xl">{{item.count}}</p>
                     </div>   
                 </div>
             </div>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import {reactive} from 'vue';
+import {reactive,onMounted} from 'vue';
 import breadcrumb from '../shared/breadcrumb.vue';
 export default {
     name: "homePage",
@@ -29,6 +29,7 @@ export default {
                 name : '',
                 url: '/'
             },
+            shopId : '',
             homeData:[
                 {
                     name:"گروه ها",
@@ -56,9 +57,12 @@ export default {
                 }
             ]
         })
-        return{
-            state
-        }
+        onMounted(() => {
+        });
+      return {
+        state
+        
+      }
     }
 }
 </script>

@@ -1,3 +1,3 @@
 export const shopGetters = {
-    getshops: state => state.data
+    getShops: state => state.data
 };

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { base_url } from "../static";
 import { LoginActionTypes } from "./login.types";
 import { CookieUtils } from "../../utils";
 
@@ -18,7 +19,7 @@ export const loginActions = {
         context.dispatch(LoginActionTypes.FETCH_LOGIN_START);
         return new Promise((resolve, reject) => {
             axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-            axios.post(`http://service.abakary.ir/api/Account/SignIn`, loginData).then(response => {
+            axios.post(`${base_url}/Account/SignIn`, loginData).then(response => {
                 if (response.data.signIn.succeeded === true) {
                     if (response.data.token) {
                         CookieUtils.setCookie(

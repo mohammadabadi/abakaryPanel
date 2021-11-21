@@ -1,6 +1,5 @@
 import axios from "axios";
-import { base_url } from "../../static";
-import { DeleteGroupActionTypes } from "./group.types";
+import { DeleteGroupActionTypes } from "./product.types";
 import { CookieUtilsInstance } from "../../../utils";
 
 export const deleteGroupActions = {
@@ -21,7 +20,7 @@ export const deleteGroupActions = {
     return new Promise((resolve, reject) => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${CookieUtilsInstance.getCookieFromBrowser("jwt_access_token")}`;
       axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-       axios.post(`${base_url}/Group/Delete?id=${GroupId}`).then(response => {
+       axios.post(`http://service.abakary.ir/api/Group/Delete?id=${GroupId}`).then(response => {
         if (response.data === GroupId) {
           resolve("delete group item successfully!");
           onSuccess();

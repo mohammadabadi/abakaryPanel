@@ -7,10 +7,11 @@
                 </div>
             </div>
             <div class="w-30/30 py-2">
-                <p class="text-blue-gray-400">علی محمدآبادی</p>
-                <router-link to="/profile">
-                    <div class="py-2 py-2 px-4 m-4 rounded-md bg-blue-gray-700 text-blue-gray-200 hover:text-blue-gray-300 focus:text-blue-gray-300 hover:bg-blue-gray-600">نمایش سایت</div>
-                </router-link>
+                <p class="text-blue-gray-400 pb-4">علی محمدآبادی</p>
+                <select @change="handleUpdateValue($event)" v-model="state.shopId" class="text-xs bg-blue-gray-800 text-bg-blue-gray-500 inline-block py-3 px-2 rounded-md border border-blue-gray-700 w-full">
+                    <option class="text-xs" v-for="item in state.shopItem" :domain="item.domain" :value="item.id">{{item.name}} - {{item.domain}}</option>
+                </select>
+                <button type="button" @click="showSite" class="inline-block py-2 py-2 px-4 m-4 rounded-md bg-blue-gray-700 text-blue-gray-200 hover:text-blue-gray-300 focus:text-blue-gray-300 hover:bg-blue-gray-600">نمایش سایت</button>
             </div>
         </div>
         <div class="side-menu w-full py-3 text-right flex flex-col text-lg border-b border-blue-gray-700">
@@ -64,7 +65,7 @@
                     تنظیمات فروشگاه
                 </div>
             </router-link>
-            <router-link to="/login">
+            <router-link to="/login" @click="signOut">
                 <div class="my-1.5 text-blue-gray-400 hover:text-blue-gray-200 focus:text-blue-gray-200 hover:bg-blue-gray-900 py-2 px-4 rounded-md">
                     <i class='feather feather-log-out relative top-px ml-2'></i>
                     خروج
@@ -75,57 +76,78 @@
 </template>
 <script>
 import {reactive,onMounted} from 'vue';
+import { CookieUtilsInstance,CookieUtils } from "../../utils";
 import { fetchShopStartAsync } from '../../store/shop/shop.actions';
-import { useStore } from "vuex";
-import { CookieUtilsInstance } from "../../utils";
 import { useToast, POSITION } from "vue-toastification";
-import { CookieUtils } from "../../utils";
+import { useStore } from "vuex";
 export default {
     setup(){
         const store = useStore();
         const toast = useToast();
         const state = reactive({
+            shopItem : [],
+            shopDomain : '',
             shopId : '',
-            searchField : {
-                page: {
-                    currentPage: 1,
-                    pageLength: 1000
-                },
-                searches: {
-                    searchAll: "",
-                    searches: []
-                },
-                orders: []
-            },
-
+            options : [],
+            lastOption : {
+                label : '',
+                value : ''
+            }
         })
-        const getShopId = () =>{
-            const data = {};
-            data.userId = CookieUtilsInstance.getCookieFromBrowser("userId");
-            data.onSuccess = (shopId) => {    
-                toast.success("فروشگاه با موفقیت انتخاب شد", {
-                    position: POSITION.TOP_CENTER
-                });
-                CookieUtils.setCookie(
-                "shopId",
-                shopId[0].id
-            );
-            };
-            data.onError = error => {
-                toast.error('خطایی در برنامه رخ داده است ، لطفا با پشتیبان تماس بگیرید', {
-                    position: POSITION.TOP_CENTER
-                });
-            };
-            fetchShopStartAsync(store, data);
+        const setShop = () => {
+            if (store.getters["shop/getShops"] !== null) {
+                state.shopId = CookieUtilsInstance.getCookieFromBrowser("shopId");
+                state.shopDomain = CookieUtilsInstance.getCookieFromBrowser("shopDomain");
+                state.shopItem = store.getters["shop/getShops"];
+            }
+            else {
+                const data = {};
+                data.userId = CookieUtilsInstance.getCookieFromBrowser("userId");
+                data.onSuccess = (shop) => {
+                    state.shopItem = shop;
+                    CookieUtils.setCookie("shopId",state.shopItem[0].id);
+                    CookieUtils.setCookie("shopDomain",state.shopItem[0].domain);
+                    state.shopId = state.shopItem[0].id.toString();
+                    state.shopDomain = state.shopItem[0].domain;
+                } 
+                data.onError = error => {
+                    toast.error('خطایی در برنامه رخ داده است ، لطفا با پشتیبان تماس بگیرید', {
+                        position: POSITION.TOP_CENTER
+                    });
+                }
+                fetchShopStartAsync(store, data);
+            }
+        }
+        const handleUpdateValue = (event) => {
+            state.shopId = event.target.value.toString();
+            var index = state.shopItem.findIndex(checkDomain);
+            state.shopDomain = state.shopItem[index].domain;
+            CookieUtils.setCookie("shopId",state.shopId);
+            CookieUtils.setCookie("shopDomain",state.shopDomain);
+        }
+        const checkDomain = (item) => {
+            return item.id == state.shopId
+        }
+        const showSite = () => {
+            window.location.href= state.shopDomain;
+        }
+        const signOut = () => {
+            CookieUtils.removeCookie("userId");
+            CookieUtils.removeCookie("shopDomain");
+            CookieUtils.removeCookie("jwt_access_token");
+            CookieUtils.removeCookie("shopId");
         }
         onMounted(() => {
-            getShopId();
+            setShop()
         });
         return{
-            state
+            state,
+            handleUpdateValue,
+            checkDomain,
+            showSite,
+            signOut
         }
-    }
-    
+    } 
 }
 </script>
 <style lang="">

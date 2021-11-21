@@ -1,6 +1,5 @@
 import axios from "axios";
-import { base_url } from "../../static";
-import { EditGroupActionTypes } from "./group.types";
+import { EditGroupActionTypes } from "./product.types";
 import { CookieUtilsInstance } from "../../../utils";
 
 export const editGroupActions = {
@@ -21,14 +20,13 @@ export const editGroupActions = {
     return new Promise((resolve, reject) => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${CookieUtilsInstance.getCookieFromBrowser("jwt_access_token")}`;
       axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-       axios.post(`${base_url}/Group/Edit`,EditGroup).then(response => {
+       axios.post(`http://service.abakary.ir/api/Group/Edit`,EditGroup).then(response => {
          debugger;
         if (response.data === EditGroup.id) {
           resolve("edit group successfully!");
           onSuccess();
         } else {
-          debugger;
-          reject(response.data.Description);
+          reject(response.data.message);
           onError();
         }
       });

@@ -1,6 +1,5 @@
 import axios from "axios";
-import { base_url } from "../../static";
-import { CreateGroupActionTypes } from "./group.types";
+import { CreateGroupActionTypes } from "./product.types";
 import { CookieUtilsInstance } from "../../../utils";
 
 export const createGroupActions = {
@@ -21,7 +20,7 @@ export const createGroupActions = {
     return new Promise((resolve, reject) => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${CookieUtilsInstance.getCookieFromBrowser("jwt_access_token")}`;
       axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-       axios.post(`${base_url}/Group/Add`,groupData).then(response => {
+       axios.post(`http://service.abakary.ir/api/Group/Add`,groupData).then(response => {
         if (response.data === 0) {
           resolve("You fetched group list successfully!");
           onSuccess();
