@@ -6,6 +6,7 @@ import deleteGroupModule from "./group/delete/group.module";
 import editGroupModule from "./group/edit/group.module";
 import productModule from "./product/product.module";
 import loginModule from "./login/login.module";
+import editProfileModule from "./profile/edit/profile.module";
 const rootModule = {
     category: categoryModule,
     group: groupModule,
@@ -14,7 +15,8 @@ const rootModule = {
     createGroup: createGroupModule,
     deleteGroup: deleteGroupModule,
     editGroup: editGroupModule,
-    shop: shopModule
+    shop: shopModule,
+    editProfile: editProfileModule,
 };
 
 export default rootModule;

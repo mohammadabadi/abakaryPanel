@@ -1,5 +1,6 @@
 import { Home } from "../views/home/routeConfig.js";
 import { Groups } from "../views/group/group.route.js";
+import { Profile } from "../views/profile/profile.route.js";
 import { Category } from "../views/category/category.route.js";
 import { Product } from "../views/product/product.route.js";
 import { Agent } from "../views/agent/agent.route.js";
@@ -10,5 +11,6 @@ export const routesConfig = [
     Category,
     Product,
     Agent,
-    Login
+    Login,
+    Profile
 ]
